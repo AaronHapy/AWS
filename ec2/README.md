@@ -45,7 +45,10 @@ When creating a new instance in EC2, we need to specify the name and tags. The n
 
 Here are a few commands we can use to connect to the EC2 instance from our terminal, install Java or Docker, and do whatever we want with it.
 
+When you want to connect to the EC2 instance from your host, you need to adjust the file permissions of the private SSH key. Otherwise, when you try to connect, you might receive an error message from AWS, such as: 'WARNING: UNPROTECTED PRIVATE KEY FILE! It is required that your private key files are NOT accessible by others.' This happens because SSH requires that your private key file be readable only by the owner for security reasons.
+
 ```
+chmod 400 {private key}
 ssh -i {key.prem} ec2-user@{ipaddress}
 sudo yum install docker -y
 sudo systemctl start.service
@@ -56,6 +59,8 @@ sudo systemctl enable docker
 sudo usermod -aG docker $USER
 
 docker run -p 5432:5432 -e POSTGRES_PASSWORD=password postgres
+
+psql -h {privateIP} -U postgres
 ```
 
 ## Amazon Machine Image (AMI)
