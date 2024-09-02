@@ -1,29 +1,29 @@
 # VPC (Virtual Private Cloud)
 
-- Virtual network dedicated to our AWS account.
-- Logically isolated section in the AWS Cloud where we create our resources like EC2, RDS, ALB, etc.
-- We have complete control on IP address ranges, subnets creation, route table configuration, etc.
+VPC is a service that allows you to create a private, isolated network within the AWS cloud. With VPC, you can 
+launch resources in a virtual network that you define. VPC provides you with complete control over your virtual networking environment,
+including IP addressing, subnets, routing tables, and network gateways.
+
+**Why use AWS VPC?**
+
+AWS VPC allows you to create a secure and isolated network for your resources, which provides a high level of security and control.
+This means that you can create your own private network, which is not accessible from the internet or other networks. AWS VPC also
+enables you to create a VPN connection between your on-premises infrastructure and your AWS VPC. This connection allows you to access
+resources in your VPC from your on-premises infrastructure.
 
 When we create our AWS account, the regions come with a default VPC.
 
-**Goal**
+![image](./images/2.png)
+![image](./images/3.png)
+![image](./images/10.png)
 
-- VPC
-- Public/Private subnets
-- CIDR
-- Internet Gateway
-- NAT Gateway
-- NACL
-- How to architect our network infrastructure for production grade applications.
 
 **Region / AZ**
 ![image](./images/1.png)
 
-**VPC**
-![image](./images/2.png)
-![image](./images/3.png)
-
 **Subnet**
+
+A subnet is a range of IP addresses in your VPC. You can launch resources, such as EC2 instances and RDS databases, in a subnet. You can also assign different subnets to different availability zones to achieve high availability and faul tolerance.
 
 - Logical subdivision of IP address range within VPC
     - VPC => House
@@ -55,25 +55,13 @@ When we create our AWS account, the regions come with a default VPC.
 
 **Internet Gateway**
 
+An internet gateway is a horizontally scaled, redundant, and highly available VPC component that allows you 
+communication between instances in your VPC and the internet.   
+
 ![image](./images/5.png)
 
-**Private IP**
 
-![image](./images/6.png)
-
-**Public IP**
-
-![image](./images/7.png)
-
-
-**Defense In Depth!**
-
-- Deploying multiple layers of defense mechanism!
-- Layered Security.
-- Redundancy.
-- It's all about infrastructure security & compliance.
-
-**Recommended Approach**
+**Recommended Approach for when creating VPCs**
 
 - Create our own VPC for our applications!
     - With multiple subnets across multiple AZs to provide high availability and fault tolerance.
@@ -120,9 +108,6 @@ In simple words Host ID is like your door number and network Id is like the rest
 **Classless IP addressing (or) CIDR**
 In order to reduce the wastage of IP addresses a new concept of Classless Inter-Domain Routing is introduced. In CIDR the block of IP addresses is assigned dynamically based on specific rules. CIDR is a group of IP addresses that are allocated to the customer when they demand a fixed number of IP addresses.
 
-
-
-
 ![image](./images/9.png)
 
 - VPC - PROD
@@ -137,31 +122,13 @@ In order to reduce the wastage of IP addresses a new concept of Classless Inter-
     - Subnet - 4
         - 10.0.4.0/24
 
-
-## Create custom VPC
-
-![image](./images/10.png)
-
 **Route Table**
 
 A set of rules - called routes - which determine where network traffic from the subnet is directed.
 ![alt text](./images/11.png)
 
-![alt text](./images/12.png)
-
 EC2 instance in the private subnet cannot be accessed directly from the internet even if it has public IP, also
 EC2 instance in the private subnet cannot access internet directly.
-
-**SSH - Private Instance**
-A VPC can be integrated with corporate network using VPN
-
-- Create a new key-pair
-- Create a new security group to allow port 22
-- Launch 2 instances with the key-pair
-    - 1 in public subnet
-    - 1 in private subnet
-
-![alt text](./images/13.png)
 
 **Private Subnet**
 
@@ -170,5 +137,17 @@ A VPC can be integrated with corporate network using VPN
     - Private subnet instances do not have public IPs
     - We cannot associate internet gateway to private subnets
 
-
 ![alt text](./images/14.png)
+
+**NAT Gateway**
+
+A network address translation (NAT) gateway enables instances in a private subnet to connect to the internet or others AWS
+services while preventing the internet from initiating connections with the instances.
+
+**Security Groups**
+
+Security groups act as a virtual firewall for your instances. You can create security groups to control inbound and outbound traffic for your instances.
+
+**Network Access Control Lists (NACLs):** 
+
+NACLs are another layer of security that act as firewall for subnets. You can use NACLs to control inbound and outbound traffic at the subnet level.
