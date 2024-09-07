@@ -333,3 +333,110 @@ Now, we can push the Docker images. Ensure that your AWS credentials are properl
     ```
 
 3. Follow the ECR push commands provided for `movie-service`, and repeat the steps for `customer-service` as well.
+
+## ECS
+
+Create a cluster where your tasks will run. You can name this cluster `prod`. Set the default namespace to `prod` and choose **Fargate** for the infrastructure. It may take a minute to create the cluster. 
+
+**Note**: If the cluster creation fails, clear the entry in **CloudFormation** and try again.
+
+### Fargate Task Definitions
+
+You need to create task definitions for each microservice. A task definition in ECS is similar to a Kubernetes deployment YAML file, as it contains:
+
+- Image name
+- CPU and memory settings
+- IAM role
+
+1. **Create Task Definition for Movie Service**:
+   - Set the **Launch Type** to **Fargate**.
+   - For **CPU Architecture**, choose **Linux/x86_64**.
+   - Set CPU to `0.5 vCPU` and memory to `1 GB`.
+   - Assign the **IAM Role** as `{yourapp}-task-role`, and use `ecsTaskExecutionRole` for the execution role.
+   - For **Docker Image Details**:
+     - Name: `movie-service`
+     - Image URI: Use the URI from your ECR repository.
+     - Set **Essential Container** to **Yes**.
+   - For **Port Mappings**:
+     - Container port: `8080`
+     - Protocol: **TCP**
+     - App protocol: **HTTP**
+   - Set an environment variable:
+     - Name: `SPRING_PROFILES_ACTIVE`
+     - Value: `prod`
+   - All other settings are optional. Click **Create**.
+
+2. Repeat the above steps for the `customer-service`.
+
+## Deploying Services
+
+1. Go to the **Task Definition** and create a service for `movie-service`. 
+   
+2. In the **Environment** section:
+   - Select the existing cluster created earlier.
+   - For **Launch Type**, choose **Fargate**.
+   - Set **Platform Version** to **Latest**.
+   - Name the service `movie-service`.
+   - Set the **Service Type** to **Replica**.
+   - Set the **Desired Tasks** to `0` (we will later change this to `2`).
+   - For **Deployment Type**, choose **Rolling Update**.
+   - Set **Minimum Running Tasks** to `100%` and **Maximum Running Tasks** to `200%`.
+
+3. In the **Service Connect** section:
+   - Enable **Service Connect**.
+   - For the **Service Connect Configuration**, select **Client and Server**.
+   - Set the **Namespace** to `prod`.
+   - For the **Service Connect** configuration:
+     - Port Alias: `movie-service-8080`
+     - Discovery Name: `movie-service`
+     - DNS Name: `movie-service`
+     - Port: `8080`
+
+4. In the **Networking** section:
+   - Select the VPC created earlier.
+   - Choose **Private Subnets 1 and 2**.
+   - For the **Security Group**, choose an existing group: `{yourapp}-app-sg`.
+   - **Do not assign a public IP**.
+
+5. For the **Load Balancer** section:
+   - Set the **Load Balancer Type** to **Application Load Balancer**.
+   - For the container, set `movie-service` with `8080:8080`.
+   - Select **Use an Existing Load Balancer** and choose `{yourapp}-alb`.
+   - Set the **Health Check Grace Period** to `90` seconds.
+
+6. In the **Listener** section:
+   - Choose **Use an Existing Listener** with `80:HTTP`.
+
+7. In the **Target Groups** section:
+   - Select **Use an Existing Target Group**.
+   - The **Target Group Name** should be `movie-service-containers`.
+   - Set the **Health Check Path** to `/actuator/health`.
+   - Use **HTTP** for the **Health Check Protocol**.
+
+8. Use the default settings and click **Create**.
+
+Repeat these steps for `customer-service`.
+
+Start the **DB instance** if you stopped it earlier. Next, we need to create a **NAT Gateway** since our application will be running inside a private subnet and will need access to pull images from ECR.
+
+1. Go to **VPC** and create a **NAT Gateway**:
+   - Name it `{yourapp}-nat-gateway`.
+   - For the subnet, choose `public1-us-west-2a`.
+   - Set the **Connectivity Type** to **Public**.
+   - Allocate an **Elastic IP** and click **Create**.
+
+2. After creating the NAT gateway, go to **Route Tables**:
+   - For **Private Subnet 1** and **Private Subnet 2**, associate the NAT gateway.
+   - Add a route with the following entry:
+     - **Destination**: `0.0.0.0/0`
+     - **Target**: The NAT gateway created earlier.
+
+3. Repeat the same route setup for **Private Subnet 2**.
+
+4. Now, in **ECS/Fargate**, go to the **movie-service** and update the service by setting the **Desired Tasks** to `2`.
+
+5. Wait for around 5 minutes to see the apps running. If there are any issues, check the logs for errors related to the DB, NAT gateway, IAM roles, or security groups.
+
+6. Repeat the same steps for the `customer-service`.
+
+At this point, you should be able to access the API via **CloudFront**. You can also verify inter-service communication by accessing `/api/customers/1`.
