@@ -1,3 +1,30 @@
 ec2/.DS_Store
 .DS_Store
 .idea
+
+# Terraform state files
+*.tfstate
+*.tfstate.*
+
+# Backup files
+*.backup
+
+# Terraform variables and secrets
+*.tfvars
+*.tfvars.json
+
+# Terraform CLI data directory
+.terraform/
+.terraform.lock.hcl
+
+# Crash logs
+crash.log
+
+# Ignore override files (local changes)
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+# Plan files (sensitive and binary data)
+*.tfplan
