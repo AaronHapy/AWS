@@ -13,16 +13,9 @@ resources in your VPC from your on-premises infrastructure.
 
 When we create our AWS account, the regions come with a default VPC.
 
-<img src="./images/2.png" alt="Alt Text" width="500" />
+<img src="./images/10.png" alt="Alt Text" width="500" />
 
-![image](./images/3.png)
-![image](./images/10.png)
-
-
-**Region / AZ**
-![image](./images/1.png)
-
-**Subnet**
+## Subnet
 
 A subnet is a range of IP addresses in your VPC. You can launch resources, such as EC2 instances and RDS databases, in a subnet. You can also assign different subnets to different availability zones to achieve high availability and faul tolerance.
 
@@ -35,9 +28,9 @@ A subnet is a range of IP addresses in your VPC. You can launch resources, such 
     - Isolating resources within VPC
     - Control inbound and outbound traffic
 
-![image](./images/4.png)
+<img src="./images/4.png" alt="Alt Text" width="500" />
 
-**Public Subnet**
+## Public Subnet
 
 A public subnet is a subnet that is accessible from the internet. so that subnet can access to the world wide web and also can be accessed fron the world wide web.
 
@@ -56,7 +49,7 @@ A public subnet is a subnet that is accessible from the internet. so that subnet
     - Not because of AWS
     - Poor understanding of network config / firewall rules etc
 
-**Private Subnet**
+## Private Subnet
 
 A private subnet is a subnet that is not accessible from the internet.
 
@@ -65,9 +58,9 @@ A private subnet is a subnet that is not accessible from the internet.
     - Private subnet instances do not have public IPs
     - We cannot associate internet gateway to private subnets
 
-![alt text](./images/14.png)
+<img src="./images/14.png" alt="Alt Text" width="500" />
 
-**Internet Gateway**
+## Internet Gateway
 
 - Internet Gateway helps our VPC instances connect with the internet.
 - Public subnets have a route to the internet gateway.
@@ -77,19 +70,7 @@ public subnets will have a route to an internet gateway.
 An internet gateway is a horizontally scaled, redundant, and highly available VPC component that allows you 
 communication between instances in your VPC and the internet.   
 
-![image](./images/5.png)
-
-
-**Recommended Approach for when creating VPCs**
-
-- Create our own VPC for our applications!
-    - With multiple subnets across multiple AZs to provide high availability and fault tolerance.
-- Customize network settings / IP address ranges
-- Deploy our application in private subnets which are NOT directly reachable in the internet.
-- Use AWS resources like CloudFront / ALB as front-facing while our application is hidden behind these AWS resources in private subnets.
-- Our app can be accessed only via ALB / CloudFront (using security groups / bucket policies)
-
-![image](./images/8.png)
+<img src="./images/5.png" alt="Alt Text" width="500" />
 
 ## CIDR
 
@@ -127,7 +108,7 @@ In simple words Host ID is like your door number and network Id is like the rest
 **Classless IP addressing (or) CIDR**
 In order to reduce the wastage of IP addresses a new concept of Classless Inter-Domain Routing is introduced. In CIDR the block of IP addresses is assigned dynamically based on specific rules. CIDR is a group of IP addresses that are allocated to the customer when they demand a fixed number of IP addresses.
 
-![image](./images/9.png)
+<img src="./images/9.png" alt="Alt Text" width="500" />
 
 - VPC - PROD
     - 10.0.0.0 / 16
@@ -146,7 +127,8 @@ In order to reduce the wastage of IP addresses a new concept of Classless Inter-
 To define access to the internet and between subnets, we use Route Tables.
 
 A set of rules - called routes - which determine where network traffic from the subnet is directed.
-![alt text](./images/11.png)
+
+<img src="./images/11.png" alt="Alt Text" width="500" />
 
 EC2 instance in the private subnet cannot be accessed directly from the internet even if it has public IP, also
 EC2 instance in the private subnet cannot access internet directly.
@@ -171,8 +153,8 @@ Security Groups
 - Can have only ALLOW rules
 - Rules includes IP addresses and other security groups.
 
-![alt text](image-1.png)
-![alt text](image-2.png)
+<img src="image-1.png" alt="Alt Text" width="500" />
+<img src="image-2.png" alt="Alt Text" width="500" />
 
 **VPC Flow Logs**
 Capture information about IP traffic going into your interfaces:
@@ -197,8 +179,7 @@ VPC Flow Logs data can go to S3, CloudWatch Logs, and kinesis Data Firehose
 - VPC Peering connection is not transitive (must be established for each VPC
  that need to communicate with one another)
 
- ![alt text](image-3.png)
-
+ <img src="image-3.png" alt="Alt Text" width="500" />
 
 **VPC Endpoints**
 - Endpoints allow you to connect to AWS services using a private network instead of the public www network.
@@ -207,7 +188,7 @@ VPC Flow Logs data can go to S3, CloudWatch Logs, and kinesis Data Firehose
 - VPC endpoint interface: the rest
 - Only used within your VPC
 
-![alt text](image-4.png)
+<img src="image-4.png" alt="Alt Text" width="500" />
 
 **Site to Site VPN & Direct Connect**
 Site to Site VPN
@@ -221,10 +202,10 @@ Direct Connect (DX)
 - Goes over a private network.
 - Takes at least a month to establish.
 
-![alt text](image-5.png)
+<img src="image-5.png" alt="Alt Text" width="500" />
 
 **Typical 3 tier solution architecture**
-![alt text](image-7.png)
+<img src="image-7.png" alt="Alt Text" width="500" />
 
 LAMP Stack on EC2
 - Linux: OS for ECS instances.
@@ -234,14 +215,24 @@ LAMP Stack on EC2
 - Can add Redis / Memcached (ElastiCache) to include a caching tech
 - To store local application data & software: EBS drive (root)
 
-![alt text](image-8.png)
+<img src="image-8.png" alt="Alt Text" width="500" />
+<img src="image-9.png" alt="Alt Text" width="500" />
 
-![alt text](image-9.png)
-
-
-**What the VPC looks like at a high level**
-![alt text](image.png)
+### What the VPC looks like at a high level
+<img src="image.png" alt="Alt Text" width="500" />
 
 
-**Summary**
-![alt text](image-6.png)
+### Recommended Approach for when creating VPCs
+
+- Create our own VPC for our applications!
+    - With multiple subnets across multiple AZs to provide high availability and fault tolerance.
+- Customize network settings / IP address ranges
+- Deploy our application in private subnets which are NOT directly reachable in the internet.
+- Use AWS resources like CloudFront / ALB as front-facing while our application is hidden behind these AWS resources in private subnets.
+- Our app can be accessed only via ALB / CloudFront (using security groups / bucket policies)
+
+<img src="./images/8.png" alt="Alt Text" width="500" />
+
+### Summary
+<img src="image-6.png" alt="Alt Text" width="500" />
+
