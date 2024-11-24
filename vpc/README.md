@@ -13,7 +13,8 @@ resources in your VPC from your on-premises infrastructure.
 
 When we create our AWS account, the regions come with a default VPC.
 
-![image](./images/2.png)
+<img src="./images/2.png" alt="Alt Text" width="300" height="200" />
+
 ![image](./images/3.png)
 ![image](./images/10.png)
 
@@ -38,6 +39,8 @@ A subnet is a range of IP addresses in your VPC. You can launch resources, such 
 
 **Public Subnet**
 
+A public subnet is a subnet that is accessible from the internet. so that subnet can access to the world wide web and also can be accessed fron the world wide web.
+
 - Each region comes with a default VPC.
     - Default VPC has 1 subnet per AZ
         - It is a public subnet.
@@ -53,7 +56,23 @@ A subnet is a range of IP addresses in your VPC. You can launch resources, such 
     - Not because of AWS
     - Poor understanding of network config / firewall rules etc
 
+**Private Subnet**
+
+A private subnet is a subnet that is not accessible from the internet.
+
+- How can an instance in the private subnet can call services in the internet/outside VPC, if required?
+- Note
+    - Private subnet instances do not have public IPs
+    - We cannot associate internet gateway to private subnets
+
+![alt text](./images/14.png)
+
 **Internet Gateway**
+
+- Internet Gateway helps our VPC instances connect with the internet.
+- Public subnets have a route to the internet gateway.
+
+public subnets will have a route to an internet gateway.
 
 An internet gateway is a horizontally scaled, redundant, and highly available VPC component that allows you 
 communication between instances in your VPC and the internet.   
@@ -124,32 +143,105 @@ In order to reduce the wastage of IP addresses a new concept of Classless Inter-
 
 **Route Table**
 
+To define access to the internet and between subnets, we use Route Tables.
+
 A set of rules - called routes - which determine where network traffic from the subnet is directed.
 ![alt text](./images/11.png)
 
 EC2 instance in the private subnet cannot be accessed directly from the internet even if it has public IP, also
 EC2 instance in the private subnet cannot access internet directly.
 
-**Private Subnet**
-
-- How can an instance in the private subnet can call services in the internet/outside VPC, if required?
-- Note
-    - Private subnet instances do not have public IPs
-    - We cannot associate internet gateway to private subnets
-
-![alt text](./images/14.png)
 
 **NAT Gateway**
+NAT gateways (AWS-managed) & NAT instances (self-managed) allow your instances in your Private Subnets
+to access the internet while remaining private.
 
 A network address translation (NAT) gateway enables instances in a private subnet to connect to the internet or others AWS
 services while preventing the internet from initiating connections with the instances.
 
-**Security Groups**
+**Network ACL & Security Groups**
+NACL (Network ACL)
+- A firewall which controls traffic from and to subnet
+- Can have ALLOW and DENY rules
+- Are attached at the Subnet level
+- Rules only include IP addresses.
 
-Security groups act as a virtual firewall for your instances. You can create security groups to control inbound and outbound traffic for your instances.
+Security Groups
+- A firewall that controls traffic to and from an ENI (elastic network interface) / an EC2 instance.
+- Can have only ALLOW rules
+- Rules includes IP addresses and other security groups.
 
-**Network Access Control Lists (NACLs):** 
+![alt text](image-1.png)
+![alt text](image-2.png)
 
-NACLs are another layer of security that act as firewall for subnets. You can use NACLs to control inbound and outbound traffic at the subnet level.
+**VPC Flow Logs**
+Capture information about IP traffic going into your interfaces:
+- VPC Flow Logs
+- Subnet Flow Logs
+- Elastic Network Interface Flow Logs
+
+Helps to monitor & troubleshoot connectivity issues. Example:
+- Subnets to internet
+- Subnets to subnets.
+- Internet to subnets.
+
+Captures network information from AWS managed interfaces too: 
+Elastic Load Balancer, ElasticCache, RDS, Aurora, etc...
+
+VPC Flow Logs data can go to S3, CloudWatch Logs, and kinesis Data Firehose
+
+**VPC peering**
+- Connect two VPC, privately using AWS' network
+- Make them behave as if they were in the same network.
+- Must not have overlapping CIDR (IP address range)
+- VPC Peering connection is not transitive (must be established for each VPC
+ that need to communicate with one another)
+
+ ![alt text](image-3.png)
 
 
+**VPC Endpoints**
+- Endpoints allow you to connect to AWS services using a private network instead of the public www network.
+- This gives you enhanced security and lower latency to access AWS services.
+- VPC endpoint gateway: S3 & DynamoDB
+- VPC endpoint interface: the rest
+- Only used within your VPC
+
+![alt text](image-4.png)
+
+**Site to Site VPN & Direct Connect**
+Site to Site VPN
+- Connect an on-premise VPN to AWS
+- The connection is automatically encrypted.
+- Goes over the public internet.
+
+Direct Connect (DX)
+- Establish a physical connection between on-premises and AWS.
+- The connection is private, secure and fast.
+- Goes over a private network.
+- Takes at least a month to establish.
+
+![alt text](image-5.png)
+
+**Typical 3 tier solution architecture**
+![alt text](image-7.png)
+
+LAMP Stack on EC2
+- Linux: OS for ECS instances.
+- Apache: Web Server that run on Linux (EC2)
+- MySQL: database on RDS
+- PHP: Application logic (running on EC2)
+- Can add Redis / Memcached (ElastiCache) to include a caching tech
+- To store local application data & software: EBS drive (root)
+
+![alt text](image-8.png)
+
+![alt text](image-9.png)
+
+
+**What the VPC looks like at a high level**
+![alt text](image.png)
+
+
+**Summary**
+![alt text](image-6.png)
