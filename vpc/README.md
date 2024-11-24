@@ -13,7 +13,7 @@ resources in your VPC from your on-premises infrastructure.
 
 When we create our AWS account, the regions come with a default VPC.
 
-<img src="./images/2.png" alt="Alt Text" width="300" height="200" />
+<img src="./images/2.png" alt="Alt Text" width="500" />
 
 ![image](./images/3.png)
 ![image](./images/10.png)
