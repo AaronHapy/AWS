@@ -4,7 +4,7 @@ VPC is a service that allows you to create a private, isolated network within th
 launch resources in a virtual network that you define. VPC provides you with complete control over your virtual networking environment,
 including IP addressing, subnets, routing tables, and network gateways.
 
-**Why use AWS VPC?**
+## Why use AWS VPC?
 
 AWS VPC allows you to create a secure and isolated network for your resources, which provides a high level of security and control.
 This means that you can create your own private network, which is not accessible from the internet or other networks. AWS VPC also
@@ -13,7 +13,7 @@ resources in your VPC from your on-premises infrastructure.
 
 When we create our AWS account, the regions come with a default VPC.
 
-<img src="./images/10.png" alt="Alt Text" width="500" />
+<img src="images/4.png" alt="Alt Text" width="500" />
 
 ## Subnet
 
@@ -28,7 +28,7 @@ A subnet is a range of IP addresses in your VPC. You can launch resources, such 
     - Isolating resources within VPC
     - Control inbound and outbound traffic
 
-<img src="./images/4.png" alt="Alt Text" width="500" />
+<img src="images/1.png" alt="Alt Text" width="500" />
 
 ## Public Subnet
 
@@ -58,7 +58,7 @@ A private subnet is a subnet that is not accessible from the internet.
     - Private subnet instances do not have public IPs
     - We cannot associate internet gateway to private subnets
 
-<img src="./images/14.png" alt="Alt Text" width="500" />
+<img src="images/6.png" alt="Alt Text" width="500" />
 
 ## Internet Gateway
 
@@ -70,78 +70,28 @@ public subnets will have a route to an internet gateway.
 An internet gateway is a horizontally scaled, redundant, and highly available VPC component that allows you 
 communication between instances in your VPC and the internet.   
 
-<img src="./images/5.png" alt="Alt Text" width="500" />
+<img src="images/2.png" alt="Alt Text" width="500" />
 
-## CIDR
-
-CIDR (Classless Inter-Domain Routing) is just a part or an extension of an IP. CIDR is nothing but a range of IP addresses a network uses. It is 
-also called supernetting. 
-
-The internet protocol (IP) is a set of rules, for addressing packets of data so that they can travel across networks and arrive at the 
-correct destination. An IP address is a unique string of characters that identifies each computer using the internet protocol to communicate over a network.
-
-- IPv4: It is the first version of the internet protocol address. In this internet protocol security (IPSec) with respect to network security is optional.
-
-- IPv6: It is the recent version of the internet protocol address. In this internet protocol security (IPSec) with respect to network security is mandatory.
-
-**Classification of IP addresses**:
-
-For technical reasons, the allocation of IP addresses has to follow the topology of the network and not geography or national borders.
-Therefore, the addresses are allocated for use in specific networks, as they are required. On the basis of addressing, IP addresses are divided into two classes, they are:
-
-- Classful IP addressing.
-- Classless IP addressing (or) CIDR
-
-**Classful Addressing**:
-
-Classful addressing is an IPv4 addressing architecture that divides the 32-bit IP address into five sub-classes, witch each class with a valid range of IP. every IPv4 address can be divided into two parts.
-
-Network ID: Identifies the specific network where the device is located.
-Host ID: Identifies a specific device in that network.
-
-Example: 
-
-192.168.32.170, the network id would be: 192.168.32 and the hostId would be: 170
-
-In simple words Host ID is like your door number and network Id is like the rest of your address containing street name, state, country. 
-
-**Classless IP addressing (or) CIDR**
-In order to reduce the wastage of IP addresses a new concept of Classless Inter-Domain Routing is introduced. In CIDR the block of IP addresses is assigned dynamically based on specific rules. CIDR is a group of IP addresses that are allocated to the customer when they demand a fixed number of IP addresses.
-
-<img src="./images/9.png" alt="Alt Text" width="500" />
-
-- VPC - PROD
-    - 10.0.0.0 / 16
-    - Subnet - 1
-        - 10.0.1.0/24
-    - Subnet - 2
-        - 10.0.2.0/24
-            - EC2 - 10.0.2.18
-    - Subnet - 3
-        - 10.0.3.0/24
-    - Subnet - 4
-        - 10.0.4.0/24
-
-**Route Table**
+## Route Table
 
 To define access to the internet and between subnets, we use Route Tables.
 
 A set of rules - called routes - which determine where network traffic from the subnet is directed.
 
-<img src="./images/11.png" alt="Alt Text" width="500" />
+<img src="images/5.png" alt="Alt Text" width="500" />
 
 EC2 instance in the private subnet cannot be accessed directly from the internet even if it has public IP, also
 EC2 instance in the private subnet cannot access internet directly.
 
 
-**NAT Gateway**
+## NAT Gateway
 NAT gateways (AWS-managed) & NAT instances (self-managed) allow your instances in your Private Subnets
 to access the internet while remaining private.
 
 A network address translation (NAT) gateway enables instances in a private subnet to connect to the internet or others AWS
 services while preventing the internet from initiating connections with the instances.
 
-**Network ACL & Security Groups**
+## Network ACL & Security Groups
 NACL (Network ACL)
 - A firewall which controls traffic from and to subnet
 - Can have ALLOW and DENY rules
@@ -153,10 +103,10 @@ Security Groups
 - Can have only ALLOW rules
 - Rules includes IP addresses and other security groups.
 
-<img src="image-1.png" alt="Alt Text" width="500" />
-<img src="image-2.png" alt="Alt Text" width="500" />
+<img src="images/7.png" alt="Alt Text" width="500" />
+<img src="images/8.png" alt="Alt Text" width="500" />
 
-**VPC Flow Logs**
+## VPC Flow Logs
 Capture information about IP traffic going into your interfaces:
 - VPC Flow Logs
 - Subnet Flow Logs
@@ -172,25 +122,25 @@ Elastic Load Balancer, ElasticCache, RDS, Aurora, etc...
 
 VPC Flow Logs data can go to S3, CloudWatch Logs, and kinesis Data Firehose
 
-**VPC peering**
+## VPC peering
 - Connect two VPC, privately using AWS' network
 - Make them behave as if they were in the same network.
 - Must not have overlapping CIDR (IP address range)
 - VPC Peering connection is not transitive (must be established for each VPC
  that need to communicate with one another)
 
- <img src="image-3.png" alt="Alt Text" width="500" />
+ <img src="images/9.png" alt="Alt Text" width="500" />
 
-**VPC Endpoints**
+## VPC Endpoints
 - Endpoints allow you to connect to AWS services using a private network instead of the public www network.
 - This gives you enhanced security and lower latency to access AWS services.
 - VPC endpoint gateway: S3 & DynamoDB
 - VPC endpoint interface: the rest
 - Only used within your VPC
 
-<img src="image-4.png" alt="Alt Text" width="500" />
+<img src="images/10.png" alt="Alt Text" width="500" />
 
-**Site to Site VPN & Direct Connect**
+## Site to Site VPN & Direct Connect
 Site to Site VPN
 - Connect an on-premise VPN to AWS
 - The connection is automatically encrypted.
@@ -202,10 +152,10 @@ Direct Connect (DX)
 - Goes over a private network.
 - Takes at least a month to establish.
 
-<img src="image-5.png" alt="Alt Text" width="500" />
+<img src="images/11.png" alt="Alt Text" width="500" />
 
-**Typical 3 tier solution architecture**
-<img src="image-7.png" alt="Alt Text" width="500" />
+## Typical 3 tier solution architecture
+<img src="images/12.png" alt="Alt Text" width="500" />
 
 LAMP Stack on EC2
 - Linux: OS for ECS instances.
@@ -215,11 +165,11 @@ LAMP Stack on EC2
 - Can add Redis / Memcached (ElastiCache) to include a caching tech
 - To store local application data & software: EBS drive (root)
 
-<img src="image-8.png" alt="Alt Text" width="500" />
-<img src="image-9.png" alt="Alt Text" width="500" />
+<img src="images/14.png" alt="Alt Text" width="500" />
+<img src="images/15.png" alt="Alt Text" width="500" />
 
 ### What the VPC looks like at a high level
-<img src="image.png" alt="Alt Text" width="500" />
+<img src="images/16.png" alt="Alt Text" width="500" />
 
 
 ### Recommended Approach for when creating VPCs
@@ -231,8 +181,8 @@ LAMP Stack on EC2
 - Use AWS resources like CloudFront / ALB as front-facing while our application is hidden behind these AWS resources in private subnets.
 - Our app can be accessed only via ALB / CloudFront (using security groups / bucket policies)
 
-<img src="./images/8.png" alt="Alt Text" width="500" />
+<img src="images/3.png" alt="Alt Text" width="500" />
 
 ### Summary
-<img src="image-6.png" alt="Alt Text" width="500" />
+<img src="images/17.png" alt="Alt Text" width="500" />
 
