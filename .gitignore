@@ -28,3 +28,5 @@ override.tf.json
 
 # Plan files (sensitive and binary data)
 *.tfplan
+
+*.zip
